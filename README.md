@@ -29,3 +29,8 @@ Python package sample with CI/CD automation on GitHub Actions.
 - Issue autofix setup: `/docs/GITHUB_ISSUE_AUTOFIX_SETUP_JA.md`
 - MCP config sample: `/.codex/config.toml.example`
 - Issue automation skill: `/.agents/skills/issue-fix-automation/SKILL.md`
+
+## Reusable Starter Template
+
+- Test template directory for new mobile projects:
+  - `/template-mobile-autonomous-test`

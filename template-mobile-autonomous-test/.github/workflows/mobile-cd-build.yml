@@ -1,0 +1,60 @@
+name: Mobile CD Build
+
+on:
+  workflow_run:
+    workflows: ["Mobile CI"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile-cd-build-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout target commit
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Build artifacts
+        run: |
+          if [ ! -x scripts/cd_build.sh ]; then
+            echo "scripts/cd_build.sh is missing or not executable."
+            exit 1
+          fi
+          scripts/cd_build.sh
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-build-${{ github.sha }}
+          path: artifacts/**
+          if-no-files-found: error

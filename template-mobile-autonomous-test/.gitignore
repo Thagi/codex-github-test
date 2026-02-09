@@ -1,0 +1,9 @@
+artifacts/
+build/
+dist/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+node_modules/
+android/.gradle/
+**/__pycache__/

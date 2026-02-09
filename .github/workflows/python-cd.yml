@@ -5,15 +5,6 @@ on:
     workflows: ["Python CI"]
     types: [completed]
   workflow_dispatch:
-    inputs:
-      deploy_target:
-        description: "Deploy target"
-        required: true
-        default: staging
-        type: choice
-        options:
-          - staging
-          - production
 
 permissions:
   contents: read
@@ -23,7 +14,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     if: >
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'workflow_run' &&
@@ -42,24 +33,17 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Resolve deploy target
-        id: target
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "value=${{ inputs.deploy_target }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "value=production" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Deploy (scripts/deploy.sh)
-        env:
-          DEPLOY_TARGET: ${{ steps.target.outputs.value }}
-          PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
-          TEST_PYPI_API_TOKEN: ${{ secrets.TEST_PYPI_API_TOKEN }}
+      - name: Build distribution (scripts/deploy.sh)
         run: |
           if [ ! -x scripts/deploy.sh ]; then
             echo "scripts/deploy.sh is missing or not executable."
             exit 1
           fi
-          echo "Running deploy for target=${DEPLOY_TARGET}"
           scripts/deploy.sh
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-dist-${{ github.sha }}
+          path: dist/*
+          if-no-files-found: error

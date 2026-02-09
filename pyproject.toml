@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "codex-github-test-thagi"
+version = "0.1.0"
+description = "Sample Python package with automated CI/CD by Codex and GitHub Actions."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Thagi" }]
+dependencies = []
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]

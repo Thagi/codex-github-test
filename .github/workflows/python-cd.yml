@@ -42,13 +42,6 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
-          fi
-
       - name: Resolve deploy target
         id: target
         run: |
@@ -59,11 +52,14 @@ jobs:
           fi
 
       - name: Deploy (scripts/deploy.sh)
+        env:
+          DEPLOY_TARGET: ${{ steps.target.outputs.value }}
+          PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+          TEST_PYPI_API_TOKEN: ${{ secrets.TEST_PYPI_API_TOKEN }}
         run: |
-          if [ -x scripts/deploy.sh ]; then
-            echo "Running deploy for target=${{ steps.target.outputs.value }}"
-            DEPLOY_TARGET="${{ steps.target.outputs.value }}" scripts/deploy.sh
-          else
-            echo "No executable scripts/deploy.sh found. Skipping deployment."
-            echo "Add scripts/deploy.sh to enable real CD."
+          if [ ! -x scripts/deploy.sh ]; then
+            echo "scripts/deploy.sh is missing or not executable."
+            exit 1
           fi
+          echo "Running deploy for target=${DEPLOY_TARGET}"
+          scripts/deploy.sh

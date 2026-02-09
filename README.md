@@ -5,19 +5,13 @@ Python package sample with CI/CD automation on GitHub Actions.
 ## Workflows
 
 - `Python CI`: runs on push and pull request to `main`/`master`.
-- `Python CD`: deploys after `Python CI` succeeds on `main`, and supports manual dispatch.
+- `Python CD`: runs after `Python CI` succeeds on `main`, builds distribution artifacts, and uploads `dist/*` as workflow artifacts.
 
-## Deploy Setup (PyPI/TestPyPI)
+## CD Behavior (Build Only)
 
-1. Create API tokens:
-   - PyPI token (production)
-   - TestPyPI token (staging)
-2. Set repository secrets in GitHub:
-   - `PYPI_API_TOKEN`
-   - `TEST_PYPI_API_TOKEN`
-3. Deployment is executed by `/scripts/deploy.sh`:
-   - `DEPLOY_TARGET=staging` uploads to TestPyPI.
-   - `DEPLOY_TARGET=production` uploads to PyPI.
+- `/scripts/deploy.sh` builds package artifacts (`sdist`/`wheel`) and validates them with `twine check`.
+- GitHub Actions uploads built files from `dist/*` to the workflow run artifacts.
+- No PyPI/TestPyPI secrets are required.
 
 ## Package
 

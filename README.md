@@ -18,3 +18,9 @@ Python package sample with CI/CD automation on GitHub Actions.
 - Package name: `codex-github-test-thagi`
 - Source: `/src/codex_github_test`
 - Version: `0.1.0`
+
+## Autonomous Development Docs
+
+- Agent operation rules: `/AGENTS.md`
+- Mobile bootstrap playbook: `/docs/MOBILE_AUTONOMOUS_BOOTSTRAP_JA.md`
+- Session summary: `/docs/CODEX_GITHUB_AUTONOMOUS_DEV_GUIDE_JA.md`

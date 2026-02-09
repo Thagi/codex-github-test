@@ -1,0 +1,26 @@
+# Copy to:
+# - ~/.codex/config.toml (global), or
+# - ./.codex/config.toml (project-local, trusted project only)
+
+# OpenAI Docs MCP (remote)
+[mcp_servers.openai_docs]
+url = "https://developers.openai.com/mcp"
+
+# GitHub MCP Server (official)
+# Setup details:
+# https://github.com/github/github-mcp-server/blob/main/docs/installation-guides/install-codex.md
+[mcp_servers.github]
+command = "docker"
+args = [
+  "run",
+  "-i",
+  "--rm",
+  "-e",
+  "GITHUB_PERSONAL_ACCESS_TOKEN",
+  "ghcr.io/github/github-mcp-server"
+]
+
+# Optional: Local filesystem MCP (example only)
+#[mcp_servers.filesystem]
+#command = "npx"
+#args = ["-y", "@modelcontextprotocol/server-filesystem", "."]

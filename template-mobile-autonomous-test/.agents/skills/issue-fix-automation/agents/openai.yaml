@@ -1,0 +1,10 @@
+interface:
+  display_name: "Issue Fix Automation"
+  short_description: "Set up Codex-driven issue-to-PR automation on GitHub."
+  default_prompt: "Configure GitHub issue-triggered Codex automation that opens fix PRs safely."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "github"
+      description: "Use when GitHub MCP is available for issue and PR operations."
